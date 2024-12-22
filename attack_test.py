@@ -817,6 +817,7 @@ def attack_with_momentum_batch(audio_input, model_fri, label, file_name, audio_t
 
                 SNR_dB += 5
                 epsilon = calculate_epsilon(audio_input, SNR_dB)
+                clamp_l2 = torch.norm(torch.ones_like(audio_input) * epsilon, p=2)
 
             elif i > 2000 or snr_db.item() > 44:
                 if bSucceed:
