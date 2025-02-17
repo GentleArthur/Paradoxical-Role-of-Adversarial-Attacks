@@ -654,7 +654,8 @@ def mel_opt(audio_input, target_feature, perturbation, epsilon):
             pert_l2 = torch.norm(perturbation, p=2)
             if pert_l2 > clamp_l2:
                 perturbation /= pert_l2
-                perturbation *= clamp_l2 * 0.5
+               # perturbation *= clamp_l2 * 0.5
+                perturbation *= 0.9
             perturbation.requires_grad_(True)
         optimizer.zero_grad()
     return perturbation
@@ -815,7 +816,7 @@ def attack_with_momentum_batch(audio_input, model_fri, label, file_name, audio_t
                 best_result = result
                 bSucceed = True
 
-                SNR_dB += 5
+                SNR_dB += 2
                 epsilon = calculate_epsilon(audio_input, SNR_dB)
                 clamp_l2 = torch.norm(torch.ones_like(audio_input) * epsilon, p=2)
 
@@ -923,7 +924,7 @@ def attack_and_count():
                     audio = audio[0:audio_target.size(-1)]
 
                 # 计算 epsilon 和 clamp_l2，用于后续的对抗攻击
-                SNR_dB = 35
+                SNR_dB = 25
                 epsilon = calculate_epsilon(audio, SNR_dB)
                 clamp_l2 = torch.norm(torch.ones_like(audio) * epsilon, p=2)
 
